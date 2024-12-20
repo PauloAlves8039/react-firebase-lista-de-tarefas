@@ -3,20 +3,35 @@ import "./home.css";
 
 import { Link } from "react-router-dom";
 
+import { auth } from "../../firebaseConnection";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+import { useNavigate } from "react-router-dom";
+
 function Home() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  const navigate = useNavigate();
 
-    function handleLogin(e) {
-      e.preventDefault();
+  async function handleLogin(e){
+    e.preventDefault();
 
-      if(email !== '' && password !== ''){
-        alert("Teste")
-      }else{
-        alert("Preencha todos os campos!")
-      }
+    if(email !== "" && password !== ""){
+      
+      await signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigate("/admin", { replace: true } )
+      })
+      .catch(() => {
+        console.log("Erro ao fazer login!")
+      })
+
+    }else{
+      alert("Preencha todos os campos!")
     }
 
+  }
     return (
       <div className="home-container">
         <h1>Lista de tarefas</h1>
@@ -31,7 +46,7 @@ function Home() {
           />
 
           <input
-            autoComplete={false}
+            autoComplete={false ? undefined : "off"}
             type="password"
             placeholder="******"
             value={password}
