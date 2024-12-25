@@ -10,8 +10,11 @@ import {
   onSnapshot,
   query,
   orderBy,
-  where 
+  where,
+  doc,
+  deleteDoc 
 } from "firebase/firestore";
+import { deleteApp } from "firebase/app";
 
 function Admin(){
   const [tarefaInput, setTarefaInput] = useState("");
@@ -75,6 +78,11 @@ function Admin(){
 
   async function handleLogut() {
     await signOut(auth);
+  }
+
+  async function deleteTarefa(id){
+    const docRef = doc(db, "tarefas", id)
+    await deleteDoc(docRef)
   }
   
   return(
